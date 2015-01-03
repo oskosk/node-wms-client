@@ -1,0 +1,30 @@
+{
+  "name": "wms-client",
+  "version": "1.0.0",
+  "description": "A client for interacting with an OGC WMS service.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/oskosk/node-wms-client"
+  },
+  "keywords": [
+    "wms",
+    "ogc",
+    "client"
+  ],
+  "author": "osk <oskosk@gmail.com> (http://olopez.com.ar/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/oskosk/node-wms-client/issues"
+  },
+  "dependencies": {
+    "extend": "~2.0.0",
+    "URIjs": "~1.14.1",
+    "debug": "~2.1.1",
+    "superagent": "~0.21.0",
+    "xml2json": "~0.5.1"
+  }
+}
