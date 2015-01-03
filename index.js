@@ -44,9 +44,13 @@ wms.prototype = {
         var err = new Error("Empty response for WMS capabilities request");
         return callback(err);
       }
-      var json = xml2json.toJson(res.text);
-      json = JSON.parse(json);
-      callback(err, json);
+      try {
+        json = xml2json.toJson(res.text);
+        json = JSON.parse(json);
+      } catch (e) {
+        return callback(e, json);
+      }
+      callback(null, json);
     });
   },
   /**
@@ -198,7 +202,7 @@ wms.prototype = {
       version: this.version,
       service: "wms"
     }, queryOptions);
-    var url = new urijs(wmsBaseUrl).query(queryOptions);
+    var url = new urijs(wmsBaseUrl).addQuery(queryOptions);
     return url.toString();
   },
   /**
@@ -230,7 +234,7 @@ wms.prototype = {
       height: "256",
       bbox: bbox
     }, queryOptions);
-    var url = new urijs(wmsBaseUrl).query(queryOptions);
+    var url = new urijs(wmsBaseUrl).addQuery(queryOptions);
     return url.toString();
   },
   /**
