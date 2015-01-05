@@ -25,7 +25,7 @@ wms.layers(function(err, layers) {
       if (!err) {
         console.log("Image written to ./buffered.png");
       }
-    })
+    });
   });
 
 });
