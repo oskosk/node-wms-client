@@ -183,10 +183,13 @@ This examples makes a GetMap request and writes the buffer to a file called `buf
 
 Makes a `GetFeatureInfo` WMS request.n pipe the request to a write stream.
 
-**{Object} xy
+**{Object} xy**
+
 * x: pixel column for the query [0 to width]
 * y: pixel row for the query [0 to height]
-**[Object] queryOptions**
+
+**{Object} queryOptions**
+
 * {String} crs. _For WMS 1.3.0 requests, the default_. The coordinate reference system.
 * {String} srs. _For WMS 1.1.1 requests_. The spatial reference system.
 * {String} layers. The comma-separated list of layers to query.
