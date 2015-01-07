@@ -3,7 +3,7 @@ var wmsUrl = "http://geocarto.igac.gov.co/geoservicios/wms",
   fs = require("fs");
 
 wms.layers(function(err, layers) {
-  var CRS = "EPSG:4686"
+  var CRS = "EPSG:4686";
   var l = layers[4];
   var writeStream = fs.createWriteStream(__dirname + '/streamed.png');
 

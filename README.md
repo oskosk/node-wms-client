@@ -1,6 +1,6 @@
 #node-wms-client
 
-A client for interacting with an OGC WMS service.
+A client for interacting with a [WMS](http://en.wikipedia.org/wiki/Web_Map_Service) service.
 
 
 #Installation
@@ -21,12 +21,18 @@ A client for interacting with an OGC WMS service.
 
 #API
 
+**Important:** By default, every request will be made with WMS version `1.3.0`.
+Initialize `wms-client` passing `requestOptions` like `{version:"1.1.1"}` for a specific version.
+
 ## Initialization
 
-###wmsclient(wmsBaseUrl)
+###wmsclient(wmsBaseUrl, [requestOptions])
 
 Returns an instance of wms client for a specific URL. You can use
 this object for calling the API's methods.
+
+* {Object} requestOptions. Some extra request options for every WMS
+request; e.g.: `{version: "1.1.1"}`
 
 ####Usage
 
@@ -106,7 +112,7 @@ If you call `pipe` on the stream returned by `wms.getMap()` then the parameter
 
 **[Object] queryOptions**
 * {String} crs. _For WMS 1.3.0 requests, the default_. The coordinate reference system.
-* {String} srs. _For WMS 1.1.1 requests, the default_. The spatial reference system.
+* {String} srs. _For WMS 1.1.1 requests_. The spatial reference system.
 * {String} layers. The comma-separated list of layers to query.
 * {Object|String} bbox. Should have `minx`, `miny`, `maxx`, `maxy` keys with 
   left, lower, right and upper bounds of bounding box with units in CRS. 
@@ -172,6 +178,23 @@ This examples makes a GetMap request and writes the buffer to a file called `buf
         }
       });
     });
+
+###wms.getFeatureInfo(xy, [queryOptions], callback(err, featureInfo))
+
+Makes a `GetFeatureInfo` WMS request.n pipe the request to a write stream.
+
+**{Object} xy
+* x: pixel column for the query [0 to width]
+* y: pixel row for the query [0 to height]
+**[Object] queryOptions**
+* {String} crs. _For WMS 1.3.0 requests, the default_. The coordinate reference system.
+* {String} srs. _For WMS 1.1.1 requests_. The spatial reference system.
+* {String} layers. The comma-separated list of layers to query.
+* {Object|String} bbox. Should have `minx`, `miny`, `maxx`, `maxy` keys with 
+  left, lower, right and upper bounds of bounding box with units in CRS. 
+  You can also pass `bbox` as a string of comma separated values with the bounds.
+* {integer} width. The width in pixels for the generated image.
+* {integer} height. The height in pixels for the generated image.
 
 
 #License
