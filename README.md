@@ -26,7 +26,7 @@ Initialize `wms-client` passing `requestOptions` like `{version:"1.1.1"}` for a 
 
 ## Initialization
 
-###wmsclient(wmsBaseUrl, [requestOptions])
+#### wmsclient(wmsBaseUrl, [requestOptions])
 
 Returns an instance of wms client for a specific URL. You can use
 this object for calling the API's methods.
@@ -34,19 +34,19 @@ this object for calling the API's methods.
 * {Object} requestOptions. Some extra request options for every WMS
 request; e.g.: `{version: "1.1.1"}`
 
-####Usage
+**Usage**
 
     var url = "http://geocarto.igac.gov.co/geoservicios/wms",
       wms = require("wms-client")(url);
 
 ## WMS related calls
 
-###wms.capabilities ([queryOptions], callback(err,capabilities) )
+#### wms.capabilities ([queryOptions], callback(err,capabilities) )
 
 Gets the capabilities reported by the WMS as a javascript object
 
 
-####Example
+**Example**
     
     var url = "http://geocarto.igac.gov.co/geoservicios/wms",
       wms = require("wms-client")(url);
@@ -55,11 +55,11 @@ Gets the capabilities reported by the WMS as a javascript object
       console.log(capabilities);
     });
 
-###wms.layers ([queryOptions], callback(err,layers))
+#### wms.layers ([queryOptions], callback(err,layers))
 
 Gets layers reported in the capabilities as a javascript array
 
-####Example
+**Example**
     
     var url = "http://geocarto.igac.gov.co/geoservicios/wms",
       wms = require("wms-client")(url);
@@ -68,11 +68,11 @@ Gets layers reported in the capabilities as a javascript array
       console.log(layers);
     });
 
-###wms.serviceMetadata ([queryOptions], callback(err,serviceMetadata))
+#### wms.serviceMetadata ([queryOptions], callback(err,serviceMetadata))
 
 Gets service metadata reported in the capabilities under the `Service` key/tag as a javascript object
 
-####Example
+**Example**
     
     var url = "http://geocarto.igac.gov.co/geoservicios/wms",
       wms = require("wms-client")(url);    
@@ -81,11 +81,11 @@ Gets service metadata reported in the capabilities under the `Service` key/tag a
       console.log(serviceMetadata);
     });
 
-###wms.supportedCrs ([queryOptions], callback(err,supportedcrs))
+#### wms.supportedCrs ([queryOptions], callback(err,supportedcrs))
 
 Gets supported CRS/SRS reported in the capabilities as a javascript array
 
-####Example
+**Example**
     
     var url = "http://geocarto.igac.gov.co/geoservicios/wms",
       wms = require("wms-client")(url);    
@@ -95,7 +95,7 @@ Gets supported CRS/SRS reported in the capabilities as a javascript array
 
     });
 
-###wms.getMap([queryOptions], callback(err, image))
+#### wms.getMap([queryOptions], callback(err, image))
 
 Makes a `GetMap` WMS request and lets you access the generated image as 
 [Buffer](http://nodejs.org/api/buffer.html) or as a [stream](http://nodejs.org/api/stream.html).
@@ -120,7 +120,7 @@ If you call `pipe` on the stream returned by `wms.getMap()` then the parameter
 * {integer} width. The width in pixels for the generated image.
 * {integer} height. The height in pixels for the generated image.
 
-#### Example getting a GetMap image as a stream
+**Example getting a GetMap image as a stream**
 
 This examples makes a GetMap request and pipes the response to a file called `streamed.png`.
 
@@ -146,7 +146,7 @@ This examples makes a GetMap request and pipes the response to a file called `st
     });
     stream.pipe(writeStream);
 
-#### Example getting a GetMap image as a buffer
+**Example getting a GetMap image as a buffer**
 
 This examples makes a GetMap request and writes the buffer to a file called `buffered.png`.
 
@@ -179,7 +179,7 @@ This examples makes a GetMap request and writes the buffer to a file called `buf
       });
     });
 
-###wms.getFeatureInfo(xy, [queryOptions], callback(err, featureInfo))
+#### wms.getFeatureInfo(xy, [queryOptions], callback(err, featureInfo))
 
 Makes a `GetFeatureInfo` WMS request.n pipe the request to a write stream.
 
@@ -200,11 +200,11 @@ Makes a `GetFeatureInfo` WMS request.n pipe the request to a write stream.
 * {integer} height. The height in pixels for the generated image.
 
 
-#License
+## License
 
 The MIT License (MIT)
 
-Copyright (c) 2014-2015 Oscar López <oskosk@gmail.com>
+Copyright (c) 2014-2015 Oscar López &lt;oskosk@gmail.com&gt;
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
