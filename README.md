@@ -16,7 +16,7 @@ A client for interacting with a [WMS](http://en.wikipedia.org/wiki/Web_Map_Servi
     // Get WMS Service Title 
     wms.capabilities(function(err, capabilities) {
       if (err) return console.log(err);
-      console.log(capabilities.WMS_Capabilities.Service.Title)
+      console.log(capabilities.Service.Title)
     });
 
 #API
