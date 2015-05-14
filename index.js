@@ -1,8 +1,8 @@
-request = require("superagent");
-urijs = require("URIjs");
-debug = require("debug")("wms-client");
-extend = require("extend");
-xml2json = require("xml2json");
+var request = require("superagent");
+var urijs = require("URIjs");
+var debug = require("debug")("wms-client");
+var extend = require("extend");
+var xml2json = require("xml2json");
 
 /**
  * @param {String} baseURL. WMS service base URL. This URL is used in subsequent
@@ -42,6 +42,7 @@ wms.prototype = {
     // i.e. like Geoserver for gml info_format
     var stream = request.get(url).type("xml").buffer();
     stream.end(function(err, res) {
+      var json;
       if (err) {
         debug("Error getting capabilities: %j", err);
         return callback(err);
@@ -57,6 +58,13 @@ wms.prototype = {
       } catch (e) {
         return callback(e, json);
       }
+      // Remove root property WMS_Capabilities or old WMT_MS_Capabilities
+      if (json.WMS_Capabilities) {
+        json = json.WMS_Capabilities;
+      }
+      if (json.WMT_MS_Capabilities) {
+        json = json.WMT_MS_Capabilities;
+      }
       callback(null, json);
     });
     return stream;
@@ -70,22 +78,23 @@ wms.prototype = {
    *   - {Array} WMS layers as an array Plain Objects
    */
   layers: function(queryOptions, callback) {
+    var _this = this;
     if (typeof queryOptions === "function") {
       callback = queryOptions;
       this.capabilities(function(err, capabilities) {
         if (err) {
-          debug("Error getting layers: %j", err);
+          debug("Error getting layers for server '%s': %j", _this.baseUrl, err.stack);
           return callback(err);
         }
-        callback(null, capabilities.WMS_Capabilities.Capability.Layer.Layer);
+        callback(null, capabilities.Capability.Layer.Layer);
       });
     } else if (typeof callback === "function") {
       this.capabilities(queryOptions, function(err, capabilities) {
         if (err) {
-          debug("Error getting layers: %j", err);
+          debug("Error getting layers for server '%s': %j", _this.baseUrl, err.stack);
           return callback(err);
         }
-        callback(null, capabilities.WMS_Capabilities.Capability.Layer.Layer);
+        callback(null, capabilities.Capability.Layer.Layer);
       });
     }
   },
@@ -106,9 +115,9 @@ wms.prototype = {
           return callback(err);
         }
         if (this.version === "1.3.0") {
-          callback(null, capabilities.WMS_Capabilities.Capability.Layer.CRS);
+          callback(null, capabilities.Capability.Layer.CRS);
         } else {
-          callback(null, capabilities.WMS_Capabilities.Capability.Layer.SRS);
+          callback(null, capabilities.Capability.Layer.SRS);
         }
       });
     } else if (typeof callback === "function") {
@@ -118,9 +127,9 @@ wms.prototype = {
           return callback(err);
         }
         if (this.version === "1.3.0") {
-          callback(null, capabilities.WMS_Capabilities.Capability.Layer.CRS);
+          callback(null, capabilities.Capability.Layer.CRS);
         } else {
-          callback(null, capabilities.WMS_Capabilities.Capability.Layer.SRS);
+          callback(null, capabilities.Capability.Layer.SRS);
         }
       });
     }
@@ -134,7 +143,7 @@ wms.prototype = {
    *   - {Array} WMS Service metadata as a Plain Object
    */
   serviceMetadata: function(queryOptions, callback) {
-    if (typeof queryOptions == "function") {
+    if (typeof queryOptions === "function") {
       callback = queryOptions;
       queryOptions = {};
     }
@@ -143,7 +152,7 @@ wms.prototype = {
         debug("Error getting service metadata: %j", err);
         return callback(err);
       }
-      callback(null, capabilities.WMS_Capabilities.Service);
+      callback(null, capabilities.Service);
     });
   },
   /**
@@ -240,6 +249,42 @@ wms.prototype = {
     });
     return stream;
   },
+  getInfo: function(layers, latlng, options, callback) {
+    options = extend({
+      crs: "EPSG:4326"
+    }, options);
+    var buffer = 128;
+    var resolution = 0.0293611270703125;
+    var minx = latlng.lng - (buffer * resolution);
+    var miny = latlng.lat - (buffer * resolution);
+    var width = buffer * 2;
+    var maxx = latlng.lng + (buffer * resolution);
+    var maxy = latlng.lat + (buffer * resolution);
+    var height = buffer * 2;
+    var stream = this.getFeatureInfo({
+      x: buffer,
+      y: buffer
+    }, {
+      layers: layers,
+      crs: options.crs,
+      bbox: {
+        minx: minx,
+        miny: miny,
+        maxx: maxx,
+        maxy: maxy
+      },
+      width: width,
+      height: height
+    }, function(err, response) {
+      if (err) {
+        return console.error(err);
+      }
+      console.log(response);
+      callback(null, response);
+
+    });
+    return stream;
+  },
   /**
    * @param {String} WMS opeation (GetMap, GetCapabilities, etc)
    * @param {Object} WMS request parameters
@@ -273,11 +318,16 @@ wms.prototype = {
    */
   capabilitiesUrl: function(wmsBaseUrl, queryOptions) {
     queryOptions = extend({
-      request: "getCapabilities",
+      request: "GetCapabilities",
       version: this.version,
-      service: "wms"
+      service: "WMS"
     }, queryOptions);
-    var url = new urijs(wmsBaseUrl).addQuery(queryOptions);
+    // Append user provided GET parameters in the URL to required queryOptions
+    var urlQueryParams = new urijs(wmsBaseUrl).search(true);
+    queryOptions = extend(queryOptions, urlQueryParams);
+    // Merge queryOptions GET parameters to the URL
+    var url = new urijs(wmsBaseUrl).search(queryOptions);
+    debug("Using capabilities URL: %s", url);
     return url.toString();
   },
   /**
@@ -327,35 +377,6 @@ wms.prototype = {
       bbox = [miny, minx, maxy, maxx].join(",");
     }
     return bbox;
-  },
-  /**
-   * APIMethod: getLonLatFromViewPortPx
-   *
-   * Parameters:
-   * viewPortPx - {<OpenLayers.Pixel>|Object} An OpenLayers.Pixel or
-   *                                          an object with a 'x'
-   *                                          and 'y' properties.
-   *
-   * Returns:
-   * {<OpenLayers.LonLat>} An OpenLayers.LonLat which is the passed-in
-   *     view port <OpenLayers.Pixel>, translated into lon/lat by the layer.
-   */
-  getLonLatFromViewPortPx: function(xy, options) {
-    var lonlat = null;
-    if (viewPortPx !== null && map.minPx) {
-      var res = this.resolution;
-      var maxExtent = map.getMaxExtent({
-        restricted: true
-      });
-      var lon = (viewPortPx.x - map.minPx.x) * res + bbox.minx;
-      var lat = (map.minPx.y - viewPortPx.y) * res + bboxy.maxy;
-      lonlat = [lon, lat];
-
-      if (this.wrapDateLine) {
-        lonlat = lonlat.wrapDateLine(this.maxExtent);
-      }
-    }
-    return lonlat;
   }
 };
 
