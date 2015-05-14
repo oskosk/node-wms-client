@@ -3,11 +3,11 @@
 A client for interacting with a [WMS](http://en.wikipedia.org/wiki/Web_Map_Service) service.
 
 
-#Installation
+## Installation
 
     npm install wms-client
 
-#Usage
+## Usage
     wmsclient = require("wms-client");
   
     var url = "http://geocarto.igac.gov.co/geoservicios/wms";
@@ -19,12 +19,12 @@ A client for interacting with a [WMS](http://en.wikipedia.org/wiki/Web_Map_Servi
       console.log(capabilities.Service.Title)
     });
 
-#API
 
-**Important:** By default, every request will be made with WMS version `1.3.0`.
-Initialize `wms-client` passing `requestOptions` like `{version:"1.1.1"}` for a specific version.
+## API
 
-## Initialization
+### Initialization
+
+    wmsclient = require("wms-client");
 
 #### wmsclient(wmsBaseUrl, [requestOptions])
 
@@ -33,6 +33,9 @@ this object for calling the API's methods.
 
 * {Object} requestOptions. Some extra request options for every WMS
 request; e.g.: `{version: "1.1.1"}`
+
+**Important:** By default, every request will be made with WMS version `1.3.0`.
+Initialize `wms-client` passing `requestOptions` like `{version:"1.1.1"}` for a specific version.
 
 **Usage**
 
