@@ -86,7 +86,11 @@ wms.prototype = {
           debug("Error getting layers for server '%s': %j", _this.baseUrl, err.stack);
           return callback(err);
         }
-        callback(null, capabilities.Capability.Layer.Layer);
+        try {
+          callback(null, capabilities.Capability.Layer.Layer);
+        } catch(e) {
+          callback(e);
+        }
       });
     } else if (typeof callback === "function") {
       this.capabilities(queryOptions, function(err, capabilities) {
