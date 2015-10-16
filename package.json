@@ -1,6 +1,6 @@
 {
   "name": "wms-client",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "A client for interacting with an OGC WMS service.",
   "main": "index.js",
   "scripts": {
@@ -24,7 +24,6 @@
     "URIjs": "~1.14.1",
     "debug": "~2.1.1",
     "extend": "~2.0.0",
-    "srs": "~0.4.6",
     "superagent": "~0.21.0",
     "xml2json": "^0.9.0"
   }
