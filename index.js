@@ -1,5 +1,5 @@
 var request = require("superagent");
-var urijs = require("URIjs");
+var urijs = require("urijs");
 var debug = require("debug")("wms-client");
 var extend = require("extend");
 var xml2json = require("xml2json");
@@ -15,6 +15,7 @@ function wms(baseUrl, requestOptions) {
   }
   this.prototype = extend(this, requestOptions);
   this.baseUrl = baseUrl;
+  this.request = request;
 }
 
 wms.prototype = {
@@ -83,15 +84,21 @@ wms.prototype = {
       callback = queryOptions;
       this.capabilities(function(err, capabilities) {
         if (err) {
-          debug("Error getting layers for server '%s': %j", _this.baseUrl, err.stack);
+          debug("Error getting layers for server '%s': %j", _this.baseUrl,
+            err.stack);
           return callback(err);
         }
-        callback(null, capabilities.Capability.Layer.Layer);
+        try {
+          callback(null, capabilities.Capability.Layer.Layer);
+        } catch (e) {
+          callback(e);
+        }
       });
     } else if (typeof callback === "function") {
       this.capabilities(queryOptions, function(err, capabilities) {
         if (err) {
-          debug("Error getting layers for server '%s': %j", _this.baseUrl, err.stack);
+          debug("Error getting layers for server '%s': %j", _this.baseUrl,
+            err.stack);
           return callback(err);
         }
         callback(null, capabilities.Capability.Layer.Layer);
@@ -233,7 +240,8 @@ wms.prototype = {
       //   json = JSON.parse(json);
       //   debug(json);
       // }
-      if (res.headers['content-disposition'] === 'inline; filename=geoserver-GetFeatureInfo.application') {
+      if (res.headers['content-disposition'] ===
+        'inline; filename=geoserver-GetFeatureInfo.application') {
         debug("Geoserver content-disposition header present");
       }
       if (typeof callback === "function") {
