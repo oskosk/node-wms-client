@@ -114,6 +114,7 @@ wms.prototype = {
    *   - {Array} CRSs as an array strings
    */
   supportedCrs: function(queryOptions, callback) {
+		var _this = this;
     if (typeof queryOptions === "function") {
       callback = queryOptions;
       this.capabilities(function(err, capabilities) {
@@ -121,10 +122,10 @@ wms.prototype = {
           debug("Error getting layers: %j", err);
           return callback(err);
         }
-        if (this.version === "1.3.0") {
+        if (_this.version === "1.3.0") {
           callback(null, capabilities.Capability.Layer.CRS);
         } else {
-          callback(null, capabilities.Capability.Layer.SRS);
+          callback(null, capabilities.Capability.Layer.SRS );
         }
       });
     } else if (typeof callback === "function") {
@@ -133,7 +134,7 @@ wms.prototype = {
           debug("Error getting layers: %j", err);
           return callback(err);
         }
-        if (this.version === "1.3.0") {
+        if (_this.version === "1.3.0") {
           callback(null, capabilities.Capability.Layer.CRS);
         } else {
           callback(null, capabilities.Capability.Layer.SRS);

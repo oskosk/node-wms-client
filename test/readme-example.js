@@ -1,8 +1,15 @@
-var url = "http://geocarto.igac.gov.co/geoservicios/wms",
-  wmsclient = require(".."),
-  wms = wmsclient(url);
+var expect = require( 'chai' ).expect;
 
-wms.capabilities(function(err, capabilities) {
-  if (err) return console.log(err);
-  console.log(capabilities.WMS_Capabilities.Service.Title);
-});
+var url = "http://geocarto.igac.gov.co/geoservicios/wms",
+  wmsclient = require( ".." );
+
+describe('README.md example snippet', function() {
+	var wms = wmsclient( url );
+	it( 'should work', function( done ) {
+		wms.capabilities(function( err, capabilities ) {
+		  expect( capabilities.Service.Title ).to.not.be.empty;
+			done( err );
+		});
+	} );
+} )
+
