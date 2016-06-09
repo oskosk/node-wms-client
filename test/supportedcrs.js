@@ -1,10 +1,19 @@
+var expect = require( 'chai' ).expect;
+
 var url = "http://geocarto.igac.gov.co/geoservicios/wms",
-  wms = require("..")(url);
+  wmsclient = require( ".." );
 
-wms.supportedCrs(function(err, data) {
-  if (err) {
-    return console.log("error: %j", err);
-  }
-  console.log(data);
+describe('supportedCrs', function() {
+	it('should fetch a non-empty json object', function( done ) {
+		var wms = wmsclient( url );
+		wms.supportedCrs( function( err, data) {
+			if (err) {
+				return done( err );
+			}
+			expect( data ).to.not.be.empty;
+			done();
+		});
 
+	} );
 });
+
