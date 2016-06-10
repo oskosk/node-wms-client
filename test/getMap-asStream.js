@@ -1,20 +1,19 @@
 var expect = require( 'chai' ).expect;
-var url = "http://geocarto.igac.gov.co/geoservicios/wms",
-	fs = require("fs"),
-  wmsclient = require( ".." );
+var url = 'http://geocarto.igac.gov.co/geoservicios/wms',
+	fs = require( 'fs' ),
+	wmsclient = require( '..' );
 
+var outputFilename = __dirname + '/stream-piped.png';
 
-var outputFilename = __dirname + "/stream-piped.png";
-
-describe('getMap as stream', function() {
-	it('should write a file with an image', function( done ) {
+describe( 'getMap as stream', function() {
+	it( 'should write a file with an image', function( done ) {
 		var wms = wmsclient( url );
-		wms.layers(function(err, layers) {
+		wms.layers( function( err, layers ) {
 			if ( err ) {
 				return done( err );
 			}
-		  var CRS = "EPSG:4686";
-		  var l = layers[5];
+			var CRS = 'EPSG:4686';
+			var l = layers[5];
 			var query = {
 				layers: l.Name,
 				crs: CRS,
@@ -28,19 +27,17 @@ describe('getMap as stream', function() {
 				height: 300
 			};
 
-		  var stream = wms.getMap( query );
+			var stream = wms.getMap( query );
 			var write = fs.createWriteStream( outputFilename );
 			stream
 				.on( 'end', function() {
 					done();
-				})
+				} )
 				.on( 'error', function( err ) {
 					done( err );
-				});
+				} );
 			stream.pipe( write );
 		} );
-
 	} );
 } );
-
 

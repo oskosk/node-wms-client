@@ -1,6 +1,6 @@
 {
   "name": "wms-client",
-  "version": "2.2.0",
+  "version": "3.0.0",
   "description": "A client for interacting with an OGC Web Map Service (WMS) compliant servers.",
   "main": "index.js",
   "scripts": {
@@ -23,6 +23,7 @@
   "dependencies": {
     "debug": "^2.2.0",
     "extend": "^3.0.0",
+    "simple-xml2json": "^1.2.3",
     "superagent": "^1.4.0",
     "urijs": "^1.16.1",
     "xml2json": "^0.9.0"

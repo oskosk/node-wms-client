@@ -9,16 +9,20 @@ A client for interacting with a [WMS](http://en.wikipedia.org/wiki/Web_Map_Servi
 
 ## Usage
     wmsclient = require("wms-client");
-  
+
     var url = "http://geocarto.igac.gov.co/geoservicios/wms";
     var wms = wmsclient(url);
 
-    // Get WMS Service Title 
+    // Get WMS Service Title
     wms.capabilities(function(err, capabilities) {
       if (err) return console.log(err);
-      console.log(capabilities.Service.Title)
+      console.log(capabilities.service.title)
     });
 
+##
+
+* Conversion from XML to JSON is done via the [simple-xml2json](https://www.npmjs.com/package/simple-xml2json) npm module.
+* All tags and attributes are lowercased after conversion from XML to JSON.
 
 ## API
 
@@ -50,7 +54,7 @@ Gets the capabilities reported by the WMS as a javascript object
 
 
 **Example**
-    
+
     var url = "http://geocarto.igac.gov.co/geoservicios/wms",
       wms = require("wms-client")(url);
 
@@ -63,7 +67,7 @@ Gets the capabilities reported by the WMS as a javascript object
 Gets layers reported in the capabilities as a javascript array
 
 **Example**
-    
+
     var url = "http://geocarto.igac.gov.co/geoservicios/wms",
       wms = require("wms-client")(url);
 
@@ -73,12 +77,12 @@ Gets layers reported in the capabilities as a javascript array
 
 #### wms.serviceMetadata ([queryOptions], callback(err,serviceMetadata))
 
-Gets service metadata reported in the capabilities under the `Service` key/tag as a javascript object
+Gets service metadata reported in the capabilities under the `ervice` key/tag as a javascript object
 
 **Example**
-    
+
     var url = "http://geocarto.igac.gov.co/geoservicios/wms",
-      wms = require("wms-client")(url);    
+      wms = require("wms-client")(url);
 
     wms.serviceMetadata(function(err, serviceMetadata) {
       console.log(serviceMetadata);
@@ -89,9 +93,9 @@ Gets service metadata reported in the capabilities under the `Service` key/tag a
 Gets supported CRS/SRS reported in the capabilities as a javascript array
 
 **Example**
-    
+
     var url = "http://geocarto.igac.gov.co/geoservicios/wms",
-      wms = require("wms-client")(url);    
+      wms = require("wms-client")(url);
 
     wms.supportedCrs(function(err, supportedcrs) {
       console.log(supportedcrs);
@@ -100,7 +104,7 @@ Gets supported CRS/SRS reported in the capabilities as a javascript array
 
 #### wms.getMap([queryOptions], callback(err, image))
 
-Makes a `GetMap` WMS request and lets you access the generated image as 
+Makes a `GetMap` WMS request and lets you access the generated image as
 [Buffer](http://nodejs.org/api/buffer.html) or as a [stream](http://nodejs.org/api/stream.html).
 
 **Getting the image as a buffer**
@@ -117,8 +121,8 @@ If you call `pipe` on the stream returned by `wms.getMap()` then the parameter
 * {String} crs. _For WMS 1.3.0 requests, the default_. The coordinate reference system.
 * {String} srs. _For WMS 1.1.1 requests_. The spatial reference system.
 * {String} layers. The comma-separated list of layers to query.
-* {Object|String} bbox. Should have `minx`, `miny`, `maxx`, `maxy` keys with 
-  left, lower, right and upper bounds of bounding box with units in CRS. 
+* {Object|String} bbox. Should have `minx`, `miny`, `maxx`, `maxy` keys with
+  left, lower, right and upper bounds of bounding box with units in CRS.
   You can also pass `bbox` as a string of comma separated values with the bounds.
 * {integer} width. The width in pixels for the generated image.
 * {integer} height. The height in pixels for the generated image.
@@ -196,8 +200,8 @@ Makes a `GetFeatureInfo` WMS request.n pipe the request to a write stream.
 * {String} crs. _For WMS 1.3.0 requests, the default_. The coordinate reference system.
 * {String} srs. _For WMS 1.1.1 requests_. The spatial reference system.
 * {String} layers. The comma-separated list of layers to query.
-* {Object|String} bbox. Should have `minx`, `miny`, `maxx`, `maxy` keys with 
-  left, lower, right and upper bounds of bounding box with units in CRS. 
+* {Object|String} bbox. Should have `minx`, `miny`, `maxx`, `maxy` keys with
+  left, lower, right and upper bounds of bounding box with units in CRS.
   You can also pass `bbox` as a string of comma separated values with the bounds.
 * {integer} width. The width in pixels for the generated image.
 * {integer} height. The height in pixels for the generated image.
