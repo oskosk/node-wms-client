@@ -7,7 +7,7 @@ describe('README.md example snippet', function() {
 	var wms = wmsclient( url );
 	it( 'should work', function( done ) {
 		wms.capabilities(function( err, capabilities ) {
-		  expect( capabilities.Service.Title ).to.not.be.empty;
+		  expect( capabilities.service.title ).to.not.be.empty;
 			done( err );
 		});
 	} );
