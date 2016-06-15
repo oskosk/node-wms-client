@@ -26,6 +26,7 @@ describe( 'getFeatureInfo', function() {
 				return done( err );
 			}
 			expect( response ).to.be.not.empty;
+			expect( response ).to.be.an( 'object' );
 			done();
 		} );
 	} );

@@ -11,6 +11,7 @@ describe( 'capabilities', function() {
 				return done( err );
 			}
 			expect( data ).to.not.be.empty;
+			expect( data ).to.be.an( 'object' );
 			done();
 		} );
 

@@ -8,6 +8,7 @@ describe( 'README.md example snippet', function() {
 	it( 'should work', function( done ) {
 		wms.capabilities( function( err, capabilities ) {
 			expect( capabilities.service.title ).to.not.be.empty;
+			expect( capabilities.service.title ).to.be.an( 'string' );
 			done( err );
 		} );
 	} );
